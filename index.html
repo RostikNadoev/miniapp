@@ -192,40 +192,41 @@
   <div class="star-effect" id="starEffect">★ ПОЗДРАВЛЯЕМ ★</div>
 
   <script>
-    const tg = window.Telegram.WebApp;
-
-tg.expand(); // расширить окно
-tg.ready(); // мини-приложение готово
-
-document.getElementById("greeting").innerText = "Привет из Mini App!";
-    // Пути к изображениям
+    // Безопасная инициализация Telegram WebApp (работает только в Telegram)
+    if (window.Telegram && window.Telegram.WebApp) {
+      const tg = window.Telegram.WebApp;
+      tg.expand();  // Разворачиваем на весь экран
+      tg.ready();   // Готовим Mini App к работе
+    }
+  
+    // Пути к изображениям (убедитесь, что 1.png, 2.png ... 8.png лежат в корне или в нужной папке)
     const imagePaths = Array.from({ length: 8 }, (_, i) => `${i + 1}.png`);
-
-    // DOM элементы
+  
+    // DOM-элементы
     const mainBox = document.getElementById("mainBox");
     const openBtn = document.getElementById("openBtn");
     const itemsContainer = document.getElementById("itemsContainer");
     const itemsList = document.getElementById("itemsList");
     const selector = document.getElementById("selector");
     const starEffect = document.getElementById("starEffect");
-
-    // Клик по коробке
+  
+    // Клик по коробке — показываем кнопку "Открыть"
     mainBox.addEventListener("click", () => {
       openBtn.style.display = "block";
     });
-
-    // Клик на "Открыть"
+  
+    // Клик по кнопке "Открыть"
     openBtn.addEventListener("click", () => {
-      // Скрываем лишнее
+      // Скрываем начальные элементы
       mainBox.style.display = "none";
       openBtn.style.display = "none";
-
-      // Показываем прокрутку
+  
+      // Показываем контейнер с прокруткой
       itemsContainer.style.display = "block";
-
-      // Очищаем
+  
+      // Очищаем предыдущие элементы (на случай повторного открытия)
       itemsList.innerHTML = '';
-
+  
       // Генерируем 30 случайных элементов
       const totalItems = 30;
       for (let i = 0; i < totalItems; i++) {
@@ -234,26 +235,26 @@ document.getElementById("greeting").innerText = "Привет из Mini App!";
         img.src = imagePaths[randomIndex];
         img.alt = `Item ${randomIndex + 1}`;
         img.draggable = false;
-        img.style.pointerEvents = "none";
-
+        img.style.pointerEvents = "none"; // Запрещаем действия с изображением
+  
         const item = document.createElement("div");
         item.className = "item";
         item.appendChild(img);
         itemsList.appendChild(item);
       }
-
-      // Запускаем анимацию
+  
+      // Запускаем анимацию прокрутки с замедлением
       itemsList.classList.add("animate");
-
-      // Через 6.5 сек — анимация закончилась
+  
+      // Через 6.5 секунд (должно совпадать с длительностью анимации) — останавливаем на случайном элементе
       setTimeout(() => {
-        // Показываем рамку и эффект
-        selector.classList.add("show");
+        selector.classList.add("show"); // Показываем золотую рамку
+  
+        // Через 600 мс — показываем эффект победы
         setTimeout(() => {
           starEffect.classList.add("show");
         }, 600);
-
-      }, 6500); // Должно совпадать с длительностью анимации
+      }, 6500);
     });
   </script>
 
